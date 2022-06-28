@@ -1,16 +1,23 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import { Server } from 'socket.io'
+import http from 'http'
 
 const app: Express = express();
-app.use("*", (req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
-const server = app.listen(5000, () => console.log("ok"));
-const io = new Server(server)
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://127.0.0.1:3000","http://localhost:3000"]
+  }
+})
 require('./modules/socket')(io)
 
+app.get('/', (req, res) => {
+  res.sendStatus(200);
+});
 
+server.listen(5000, () => {
+  console.log('listening on *:5000');
+});
 
 
 /* import webSocket from 'ws'
