@@ -11,8 +11,7 @@ module.exports = (io: Server) => {
     console.log("a user connected");
     socket.emit("connectSuccess", "连接成功");
     // 广播
-    socket.on("sendMsg", (e: string) => {
-      const sendData: FriendListMsg = JSON.parse(e);
+    socket.on("sendMsg", (sendData: FriendListMsg) => {
       sendData.isMe = false;
       socket.broadcast.emit("sendMsg", sendData);
     });
