@@ -10,6 +10,11 @@ module.exports = (io: Server) => {
   io.on("connection", (socket) => {
     console.log("a user connected");
     socket.emit("connectSuccess", "连接成功");
+    // 在线人数
+    io.sockets.emit("userCount", io.engine.clientsCount)
+    socket.on("disconnect", (reason) => {
+      socket.broadcast.emit("userCount", io.engine.clientsCount)
+    });
     // 广播
     socket.on("sendMsg", (sendData: FriendListMsg) => {
       sendData.isMe = false;
