@@ -1,38 +1,49 @@
 export interface ServerToClientEvents {
-  connectSuccess: (val: string) => void
-  userCount: (userCount: number) => void
-  sendMsg: (sendData: FriendListMsg) => void
-  userList: (userList: UserList[]) => void
-  contextmenu_avatar: (msg: '@AITE_NAME' | 'PAI_YI_PAI') => void
+  connectSuccess: (val: string) => void;
+  userCount: (userCount: number) => void;
+  sendMsg: (sendData: FriendListMsg) => void;
+  userList: (userList: UserList[]) => void;
+  contextmenu_avatar: (
+    type: "@AITE_NAME" | "PAI_YI_PAI",
+    options?: contextmenu_avatar_type
+  ) => void;
+  // inform_message: ()
 }
 
 export interface ClientToServerEvents {
-  disconnect: () => void
-  sendMsg: (sendData: FriendListMsg, aiteTargets?: string[]) => void
-  contextmenu_avatar: (options: { type: '@AITE_NAME' | 'PAI_YI_PAI', target: string, userName: string }) => void
+  disconnect: () => void;
+  sendMsg: (sendData: FriendListMsg, aiteTargets?: string[]) => void;
+  contextmenu_avatar: (options: contextmenu_avatar_type) => void;
 }
 
-export interface InterServerEvents {
-}
+export interface InterServerEvents {}
 
 export interface SocketData {
-  userName: string
+  userName: string;
 }
 
 export interface FriendListMsg {
-  msg: string
-  name: string
-  isMe: boolean
-  date: string
-  type: 'image' | 'text'
-  userId: string
+  msg: string;
+  name: string;
+  isMe: boolean;
+  date: string;
+  type: "image" | "text";
+  userId: string;
 }
 
 export interface UserList {
-  userId: string
-  userName?: string
+  userId: string;
+  userName?: string;
 }
 
 export interface SocketType {
-  userName: string
+  userName: string;
+}
+
+export interface contextmenu_avatar_type {
+  type: "@AITE_NAME" | "PAI_YI_PAI";
+  targetId: string;
+  targetName: string;
+  selfName: string;
+  selfId: string;
 }
