@@ -19,7 +19,7 @@ export default (req: Request, res: Response) => {
   const filePath = req.file?.path ?? "";
   sql(`select * from userList where userName="${userName}"`, (err, data) => {
     if (err) {
-      fs.unlink(req.file?.path ?? "", (err) => {
+      fs.unlink(filePath, (err) => {
         res.json({
           code: 4,
           msg: "服务器繁忙",
