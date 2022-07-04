@@ -43,9 +43,9 @@ module.exports = (
     });
     // 右键头像 功能
     socket.on("contextmenu_avatar", (options) => {
-      const { type} = options;
+      const { type } = options;
 
-      io.emit("contextmenu_avatar", type, options);
+      io.emit("contextmenu_avatar", type, options); // 发起 launch 接收 receive 
     });
 
     // 所有用户
