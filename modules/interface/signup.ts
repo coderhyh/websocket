@@ -9,25 +9,25 @@ import moment from "moment";
     userName passWord avatar
   返回参数
     code 
-      1 成功
-      2 用户名被占用
-      3 参数缺失
-      4 服务器繁忙
+      200 成功
+      500 用户名被占用
+      500 参数缺失
+      500 服务器繁忙
 */
 export default (req: Request, res: Response) => {
   const { userName, passWord } = req.body;
   const filePath = req.file?.path ?? "";
-  sql(`select * from userList where userName="${userName}"`, (err, data) => {
-    if (err) {
-      fs.unlink(filePath, (err) => {
-        res.json({
-          code: 4,
-          msg: "服务器繁忙",
-        });
+  if (!/^\w{6,12}$/g.test(passWord)) {
+    fs.unlink(filePath, (err) => {
+      res.json({
+        code: 500,
+        msg: "请输入数字、字母、下划线6-12位密码 !",
       });
-      return;
-    }
+    });
+    return;
+  }
 
+  sql(`select * from userList where userName="${userName}"`, (err, data) => {
     if (!data.length) {
       const keys = `userName, passWord, avatar, userId, role, createTime, userMessage`;
       const nowDate = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -36,26 +36,15 @@ export default (req: Request, res: Response) => {
         '${uuidv1()}', 'visitor', '${nowDate}', '[]'`;
       const sqlStr = `insert into userList (${keys}) value(${newData})`;
       sql(sqlStr, (err, data) => {
-        console.log(err, data);
-        
-        if (err) {
-          fs.unlink(filePath, (err) => {
-            res.json({
-              code: 4,
-              msg: "服务器繁忙",
-            });
-          });
-        } else {
-          res.json({
-            code: 1,
-            msg: "注册成功",
-          });
-        }
+        res.json({
+          code: 200,
+          msg: "注册成功",
+        });
       });
     } else {
       fs.unlink(filePath, (err) => {
         res.json({
-          code: 2,
+          code: 500,
           msg: "用户名被占用",
         });
       });
