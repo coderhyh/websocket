@@ -3,16 +3,20 @@ var pool = mysql.createPool({
   host: "127.0.0.1",
   port: 3306,
   user: "root",
-  password: "772567615",
+  password: "root",
   database: "wechat",
 });
 
-export default (sql: string, hook: (err: MysqlError, data: any) => void) => {
-  pool.getConnection((err: MysqlError, connection: PoolConnection) => {
-    connection.query(sql, (err: MysqlError, data: any) => {
-      hook(err, data);
-      // 释放资源
-      connection.release();
+export default (sql: string): Promise<MysqlError | any> => {
+  return new Promise((resolve, inject) => {
+    pool.getConnection((err: MysqlError, connection: PoolConnection) => {
+      connection.query(sql, (err: MysqlError, data: any) => {
+        if (err) inject(err)
+        else resolve(data)
+          
+        // 释放资源
+        connection.release();
+      });
     });
-  });
+  })
 };

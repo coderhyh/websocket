@@ -4,9 +4,12 @@ import {
   InterServerEvents,
   SocketData,
   FriendListMsg,
+  UserInfo,
   UserList,
 } from "../types/socket";
 import { Server } from "socket.io";
+import tk from 'jsonwebtoken'
+import sql from "./utils/linkSql";
 
 module.exports = (
   io: Server<
@@ -17,11 +20,19 @@ module.exports = (
   >
 ) => {
   io.on("connection", (socket) => {
-    // io.use((socket, next) => {
-    //   const username = ;
-    //   socket.data.userName = username;
-    //   next();
-    // })
+    let userInfo: UserInfo
+    io.use((socket, next) => {
+      const token = socket.handshake.auth.token
+      tk.verify(token, '772567615', async (err: any, data: any) => {
+        const user: UserInfo = data.userInfo
+        if (err) return next(new Error("无效token"));
+        const s = `select * from user_list where userId="${user.userId}"`
+        const sqlData = await sql(s).catch(err => [])
+        if (!sqlData.length) return next(new Error("无效token"));
+        userInfo = user
+        next()
+      })
+    })
 
     console.log("a user connected");
     socket.emit("connectSuccess", "连接成功");

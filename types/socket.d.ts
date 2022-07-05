@@ -47,3 +47,12 @@ export interface contextmenu_avatar_type {
   launchName: string;
   launchId: string;
 }
+
+export interface UserInfo {
+  code: number
+  msg: string
+  userName: string
+  userId: string
+  avatar: string
+  token: string
+}
