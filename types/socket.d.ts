@@ -1,3 +1,5 @@
+import type { FriendListMsg, UserInfo, UserList } from './user'
+
 export interface ServerToClientEvents {
   connectSuccess: (val: string) => void;
   userCount: (userCount: number) => void;
@@ -16,24 +18,10 @@ export interface ClientToServerEvents {
   contextmenu_avatar: (options: contextmenu_avatar_type) => void;
 }
 
-export interface InterServerEvents {}
+export interface InterServerEvents { }
 
 export interface SocketData {
   userName: string;
-}
-
-export interface FriendListMsg {
-  msg: string;
-  name: string;
-  isMe: boolean;
-  date: string;
-  type: "image" | "text";
-  userId: string;
-}
-
-export interface UserList {
-  userId: string;
-  userName?: string;
 }
 
 export interface SocketType {
@@ -46,13 +34,4 @@ export interface contextmenu_avatar_type {
   receiveName: string;
   launchName: string;
   launchId: string;
-}
-
-export interface UserInfo {
-  code: number
-  msg: string
-  userName: string
-  userId: string
-  avatar: string
-  token: string
 }

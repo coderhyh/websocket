@@ -3,10 +3,12 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
+} from "../types/socket";
+import {
   FriendListMsg,
   UserInfo,
   UserList,
-} from "../types/socket";
+} from '../types/user'
 import { Server } from "socket.io";
 import tk from 'jsonwebtoken'
 import sql from "./utils/linkSql";
@@ -19,26 +21,31 @@ module.exports = (
     SocketData
   >
 ) => {
-  io.on("connection", (socket) => {
-    let userInfo: UserInfo
-    io.use((socket, next) => {
-      const token = socket.handshake.auth.token
-      tk.verify(token, '772567615', async (err: any, data: any) => {
-        const user: UserInfo = data.userInfo
-        if (err) return next(new Error("无效token"));
-        const s = `select * from user_list where userId="${user.userId}"`
-        const sqlData = await sql(s).catch(err => [])
-        if (!sqlData.length) return next(new Error("无效token"));
-        userInfo = user
-        next()
-      })
+  const _users: { [k: string]: string } = {}
+  let userInfo: UserInfo
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token
+    tk.verify(token, '772567615', async (err: any, data: any) => {
+      const user: UserInfo = data.userInfo
+      if (err) return next(new Error("无效token"));
+      const s = `select * from user_list where userId="${user.userId}"`
+      const sqlData = await sql(s).catch(err => [])
+      if (!sqlData.length) return next(new Error("无效token"));
+      userInfo = user
+      next()
     })
+  })
+  io.on("connection", (socket) => {
+    const { userId } = userInfo
+    const curUserId = _users[userId] = socket.id
 
     console.log("a user connected");
     socket.emit("connectSuccess", "连接成功");
     // 在线人数
     io.emit("userCount", io.engine.clientsCount);
+    // 离开
     socket.on("disconnect", (reason) => {
+      if (_users[userId]) delete _users[userId]
       socket.broadcast.emit("userCount", io.engine.clientsCount);
     });
     // 广播

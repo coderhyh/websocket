@@ -15,7 +15,7 @@ import { Request, Response } from "express";
 export default async (req: Request, res: Response) => {
   const { userName, passWord } = req.body;
   const sqlStr = `select * from user_list where userName = "${userName}" and passWord = "${passWord}"`;
-  const data = await sql(sqlStr).catch(err => err)
+  const data = await sql(sqlStr).catch(err => [])
   if (data.length) {
     res.json({
       code: 200,

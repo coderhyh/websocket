@@ -34,7 +34,7 @@ export default async (req: Request, res: Response) => {
         'http://127.0.0.1:5000/images/${req.file?.filename}',
         '${uuidv1()}', 'visitor', '${nowDate}', '[]'`;
     const sqlStr = `insert into user_list (${keys}) value(${newData})`;
-    const data = await sql(sqlStr).catch(err => err)
+    const data = await sql(sqlStr).catch(err => [])
     res.json({
       code: 200,
       msg: "注册成功",

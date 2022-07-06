@@ -4,6 +4,7 @@ import required from "../utils/required";
 
 import signup from "../interface/signup";
 import login from "../interface/login";
+import userInfo from "../interface/userInfo";
 module.exports = (api_router: Router) => {
   api_router.post(
     "/signup",
@@ -16,5 +17,11 @@ module.exports = (api_router: Router) => {
     "/login",
     required(["userName", "passWord"]),
     login
+  );
+
+  api_router.post(
+    "/userInfo",
+    required(["token"]),
+    userInfo
   );
 };
