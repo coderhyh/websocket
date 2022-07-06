@@ -1,4 +1,4 @@
-import type { FriendListMsg, UserInfo, UserList } from './user'
+import type { FriendListMsg, UserInfo, UserList } from "./user";
 
 export interface ServerToClientEvents {
   connectSuccess: (val: string) => void;
@@ -18,14 +18,13 @@ export interface ClientToServerEvents {
   contextmenu_avatar: (options: contextmenu_avatar_type) => void;
 }
 
-export interface InterServerEvents { }
+export interface InterServerEvents {
+  userInfo: UserInfo;
+}
 
 export interface SocketData {
   userName: string;
-}
-
-export interface SocketType {
-  userName: string;
+  userInfo: UserInfo;
 }
 
 export interface contextmenu_avatar_type {
