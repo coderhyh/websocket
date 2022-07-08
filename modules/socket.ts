@@ -18,12 +18,11 @@ module.exports = (
   >
 ) => {
   const _users: { [k: string]: string } = {};
-  let userInfo: UserInfo;
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
     tk.verify(token, "772567615", async (err: any, data: any) => {
-      const user: UserInfo = data.userInfo;
       if (err) return next(new Error("无效token"));
+      const user: UserInfo = data.userInfo;
       const s = `select * from user_list where userId="${user.userId}"`;
       const sqlData = await sql(s).catch((err) => []);
       if (!sqlData.length) return next(new Error("无效token"));
@@ -38,11 +37,17 @@ module.exports = (
     console.log("a user connected");
     socket.emit("connectSuccess", "连接成功");
     // 在线人数
-    io.emit("userCount", io.engine.clientsCount);
+    io.emit("userConnected", io.engine.clientsCount, {
+      status: 'connect',
+      userName: socket.data.userInfo?.userName!
+    });
     // 离开
     socket.on("disconnect", (reason) => {
       if (_users[userId!]) delete _users[userId!];
-      socket.broadcast.emit("userCount", io.engine.clientsCount);
+      socket.broadcast.emit("userConnected", io.engine.clientsCount, {
+        status: 'break',
+        userName: socket.data.userInfo?.userName!
+      });
     });
     // 广播
     socket.on("sendMsg", (sendData, aiteTargets) => {

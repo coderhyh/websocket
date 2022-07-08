@@ -24,7 +24,7 @@ export default async (req: Request, res: Response) => {
       userId: data[0].userId,
       avatar: data[0].avatar,
       token: tk.sign({ userInfo: data[0] }, "772567615", {
-        expiresIn: 60 * 60 * 24
+        expiresIn: 60 * 60 * 24 * 7
       })
     })
   } else {

@@ -2,7 +2,7 @@ import type { FriendListMsg, UserInfo, UserList } from "./user";
 
 export interface ServerToClientEvents {
   connectSuccess: (val: string) => void;
-  userCount: (userCount: number) => void;
+  userConnected: (userCount: number, userName: { status: 'connect' | 'break', userName: string }) => void;
   sendMsg: (sendData: FriendListMsg) => void;
   userList: (userList: UserList[]) => void;
   contextmenu_avatar: (
@@ -23,7 +23,6 @@ export interface InterServerEvents {
 }
 
 export interface SocketData {
-  userName: string;
   userInfo: UserInfo;
 }
 
