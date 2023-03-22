@@ -4,6 +4,8 @@ import fs from "fs";
 import { Request, Response } from "express";
 import moment from "moment";
 
+import config from '../../config'
+
 /* 
   注册
     userName passWord avatar
@@ -31,7 +33,7 @@ export default async (req: Request, res: Response) => {
     const keys = `userName, passWord, avatar, userId, role, createTime, userMessage`;
     const nowDate = moment().format("YYYY-MM-DD HH:mm:ss");
     const newData = `'${userName}','${passWord}',
-        'http://127.0.0.1:5000/images/${req.file?.filename}',
+        'http://127.0.0.1:${config.PROT}/images/${req.file?.filename}',
         '${uuidv1()}', 'visitor', '${nowDate}', '[]'`;
     const sqlStr = `insert into user_list (${keys}) value(${newData})`;
     const data = await sql(sqlStr).catch(err => err)

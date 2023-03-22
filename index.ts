@@ -8,6 +8,8 @@ import express, {
 import { Server } from "socket.io";
 import http from "http";
 
+import config from './config'
+
 const app: Express = express();
 app.use("*", (req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -30,15 +32,11 @@ require('./modules/interface/api_router')(api_router)
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://127.0.0.1:3000",
-      "http://localhost:3000",
-      "https://chat.coderhyh.top",
-    ],
+    origin: config.SOCKET_CORS_ORIGIN
   },
 });
 require("./modules/socket")(io);
 
-server.listen(5000, () => {
-  console.log("http://127.0.0.1:5000");
+server.listen(config.PROT, () => {
+  console.log(`http://127.0.0.1:${config.PROT}`);
 });
